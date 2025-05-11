@@ -27,6 +27,8 @@ jobs:
         run: pip install --upgrade pip
       - name: paso4 - instalar dependencias
         run: pip install -e .
+      - name: paso5 - Ejecutar Script
+        run: python src/PIV_Oro/static/ejecucion.py
 
       - name: Commit and Push changes
         uses: stefanzweifel/git-auto-commit-action@v5
