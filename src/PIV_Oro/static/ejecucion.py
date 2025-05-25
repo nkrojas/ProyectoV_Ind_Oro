@@ -16,9 +16,9 @@ def main():
     collector = Collector(logger=logger)
     df =collector.collector_data()
     enricher = Enricher(logger=logger)
-    df.to_csv("src/PIV_Oro/static/data/Oro_datosOriginales.csv")
+    df.to_csv("src/PIV_Oro/static/data/Oro_datosOriginales.csv", sep=";", index=False)
     df_2=enricher.calcular_kpi(df)
-    df_2.to_csv("src/PIV_Oro/static/data/Oro_datosOriginales_enricher.csv")
+    df_2.to_csv("src/PIV_Oro/static/data/Oro_datosOriginales_enricher.csv", sep=";", index=False)
 
 
 

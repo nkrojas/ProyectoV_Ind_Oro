@@ -7,7 +7,7 @@ import os
 class Collector:
     def __init__(self, logger):
 
-        self.url = "https://es.finance.yahoo.com/quote/GC%3DF/history/?period1=967608000&period2=1746589264"
+        self.url = "https://es.finance.yahoo.com/quote/GC%3DF/history/?period1=967766400&period2=1748134060"
         self.logger = logger
 
         if not os.path.exists("src/PIV_Oro/static/data"):
