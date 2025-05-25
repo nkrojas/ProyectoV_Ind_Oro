@@ -1,0 +1,2 @@
+[2025-05-25 19:42:11 | OroAnalysis | Main | main | INFO] Inicializar clase Logger
+[2025-05-25 19:42:16 | OroAnalysis | Enricher | calcular_kpi | ERROR] Error al enriquecer el df: No numeric types to aggregate

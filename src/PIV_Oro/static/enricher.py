@@ -15,6 +15,10 @@ class Enricher:
         try:
             df = df.copy()
 
+            # Limpiar nombres de columnas
+            df.columns = df.columns.str.strip().str.lower()
+
+            # Procesamiento personalizado de fechas
             fechas_convertidas = []
             for fecha in df["fecha"]:
                 if not fecha or fecha == '0':
@@ -30,21 +34,36 @@ class Enricher:
                     except Exception as e:
                         self.logger.warning("Enricher", "calcular_kpi", f"Fecha malformada '{fecha}': {e}")
                         fechas_convertidas.append(datetime.now().strftime("%Y-%m-%d"))
+            df["fecha"] = pd.to_datetime(fechas_convertidas, errors="coerce")
 
-            df["fecha"] = pd.to_datetime(fechas_convertidas)
+            # Ordenar por fecha
+            df = df.sort_values("fecha")
 
-            # Conversión de columnas numéricas
+            # Conversión de columnas numéricas (excepto fecha)
             for col in df.columns:
                 if col != "fecha":
-                    df[col] = pd.to_numeric(df[col].astype(str).str.replace(',', '.', regex=False), errors='coerce')
+                    df[col] = (
+                        df[col]
+                        .astype(str)
+                        .str.replace('.', '', regex=False)  # eliminar separador de miles
+                        .str.replace(',', '.', regex=False)  # cambiar decimal
+                    )
+                    df[col] = pd.to_numeric(df[col], errors='coerce')
+
+            # Validar existencia de columna clave
+            if "cerrar" not in df.columns or not pd.api.types.is_numeric_dtype(df["cerrar"]):
+                raise ValueError("La columna 'cerrar' no existe o no es numérica.")
 
             # Cálculo de indicadores KPI
-            df["media_movil_7d"] = df["cerrar"].rolling(window=7, min_periods=1).mean()
-            df["tasa_variacion"] = df["cerrar"].pct_change().fillna(0)
+            df["media_movil_7d"] = df["cerrar"].rolling(window=7).mean()
+            df["tasa_variacion"] = df["cerrar"].pct_change()
             df["retorno_acumulado"] = (1 + df["tasa_variacion"]).cumprod() - 1
-            df["std_5d"] = df["cerrar"].rolling(window=5, min_periods=1).std()
-            df["volatilidad"] = df["cerrar"].rolling(window=5, min_periods=1).std()
+            df["volatilidad_anualizada"] = df["tasa_variacion"].rolling(window=21).std() * np.sqrt(252)
+            df["volatilidad"] = df["cerrar"].rolling(window=5).std()
 
+            # Rellenar y redondear KPIs
+            columnas_kpi = ["media_movil_7d", "tasa_variacion", "retorno_acumulado", "volatilidad_anualizada", "volatilidad"]
+            df[columnas_kpi] = df[columnas_kpi].fillna(0).round(4)
 
             self.logger.info('Enricher', 'calcular_kpi', 'Indicadores KPI calculados correctamente.')
             return df
