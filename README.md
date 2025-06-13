@@ -23,6 +23,7 @@ Este proyecto tiene como objetivo analizar series temporales del precio del oro 
 │   └── model.pkl                       # Modelo entrenado
 ├── requirements.txt                    # Dependencias del proyecto
 └── README.md                           # Documentación general
+![alt text](image-1.png)
 #
 
 
