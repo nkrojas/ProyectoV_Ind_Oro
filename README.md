@@ -9,20 +9,7 @@ Este proyecto tiene como objetivo analizar series temporales del precio del oro 
 
 
 #
-├── docs/                               # Documentacion.
-│   └── entrega1.pdf
-├── src/
-    ├── data/                           # Datos originales del oro (CSV descargado)
-│   └── Oro_datosOriginales_enricher.csv
-│   ├── collector.py                    # Carga datos desde CSV local
-│   ├── enricher.py                     # Calcula variables técnicas y KPIs
-│   ├── modeller.py                     # Entrenamiento y predicción con RandomForest
-│   ├── dashboard.py                    # Interfaz Streamlit con KPIs y predicciones
-│   └── workflows/                      # (Opcional) flujos automatizados
-├── static/models/
-│   └── model.pkl                       # Modelo entrenado
-├── requirements.txt                    # Dependencias del proyecto
-└── README.md                           # Documentación general
+
 ![alt text](image-1.png)
 #
 
